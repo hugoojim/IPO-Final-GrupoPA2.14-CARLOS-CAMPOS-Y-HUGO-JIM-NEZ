@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURA | The End of Borders</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #0A0A0B; color: #F9FAFB; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .hero-gradient { background: radial-gradient(circle at center, #1e293b 0%, #0a0a0b 100%); }
+        .text-gradient { background: linear-gradient(to right, #fff, #9ca3af); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .cta-glow:hover { box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); transition: all 0.3s ease; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <nav class="fixed w-full z-50 glass py-4 px-6 flex justify-between items-center">
+        <div class="text-2xl font-bold tracking-tighter">AURA</div>
+        <div class="hidden md:flex space-x-8 text-sm font-medium text-gray-400">
+            <a href="#features" class="hover:text-white transition">Tecnología</a>
+            <a href="#casos" class="hover:text-white transition">Casos de uso</a>
+            <a href="#comparativa" class="hover:text-white transition">Diferencia</a>
+        </div>
+        <button class="bg-blue-600 hover:bg-blue-500 text-white px-5 py-2 rounded-full text-sm font-semibold cta-glow">Reservar</button>
+    </nav>
+
+    <section class="relative h-screen flex items-center justify-center text-center px-4 hero-gradient overflow-hidden">
+        <div class="z-10 max-w-4xl">
+            <span class="text-blue-500 font-semibold tracking-widest uppercase text-xs mb-4 block">Próxima generación de audio</span>
+            <h1 class="text-5xl md:text-8xl font-extrabold tracking-tight mb-6 text-gradient leading-tight">
+                Habla cualquier idioma. <br> Sin aprender una palabra.
+            </h1>
+            <p class="text-lg md:text-xl text-gray-400 mb-10 max-w-2xl mx-auto leading-relaxed">
+                AURA traduce el mundo a tu oído en tiempo real. Comunicación fluida, natural y sin pantallas de por medio.
+            </p>
+            <div class="flex flex-col md:flex-row gap-4 justify-center items-center">
+                <button class="bg-blue-600 text-white px-8 py-4 rounded-full text-lg font-bold w-full md:w-auto cta-glow">Reservar con acceso prioritario</button>
+                <button class="border border-gray-700 hover:bg-white hover:text-black transition px-8 py-4 rounded-full text-lg font-bold w-full md:w-auto">Ver cómo funciona</button>
+            </div>
+            <p class="mt-6 text-xs text-gray-500 uppercase tracking-widest">⚡️ Latencia < 50ms | 42 Idiomas | 12h Batería</p>
+        </div>
+    </section>
+
+    <section class="py-24 px-6 max-w-7xl mx-auto">
+        <h2 class="text-3xl md:text-5xl font-bold mb-16 text-center text-white">El mundo es gigante.<br><span class="text-gray-500 text-2xl md:text-4xl">No dejes que tu idioma lo haga pequeño.</span></h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="glass p-8 rounded-3xl">
+                <h3 class="text-blue-500 font-bold mb-2">Viajes</h3>
+                <p class="text-gray-400">Elimina el miedo a perderte en ciudades desconocidas o a no poder conectar con la cultura local.</p>
+            </div>
+            <div class="glass p-8 rounded-3xl">
+                <h3 class="text-blue-500 font-bold mb-2">Negocios</h3>
+                <p class="text-gray-400">Cierra contratos internacionales sin necesidad de intérpretes. Tú hablas, ellos entienden.</p>
+            </div>
+            <div class="glass p-8 rounded-3xl">
+                <h3 class="text-blue-500 font-bold mb-2">Educación</h3>
+                <p class="text-gray-400">Vive tu experiencia Erasmus al 100%. Socializa sin barreras desde el primer día.</p>
+            </div>
+            <div class="glass p-8 rounded-3xl">
+                <h3 class="text-blue-500 font-bold mb-2">Servicio</h3>
+                <p class="text-gray-400">Atiende a clientes de cualquier rincón del mundo con la misma calidez y precisión.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="py-24 bg-zinc-900/50">
+        <div class="max-w-5xl mx-auto px-6">
+            <div class="text-center mb-20">
+                <h2 class="text-4xl font-bold mb-4">Ingeniería para la conexión humana</h2>
+                <p class="text-gray-400">Tres capas tecnológicas trabajando en milisegundos.</p>
+            </div>
+            <div class="space-y-24">
+                <div class="flex flex-col md:flex-row items-center gap-12">
+                    <div class="flex-1">
+                        <span class="text-blue-500 text-6xl font-black opacity-20">01</span>
+                        <h3 class="text-2xl font-bold mb-4">Detección Inteligente</h3>
+                        <p class="text-gray-400">Micrófonos direccionales con *beamforming* aíslan la voz de tu interlocutor, filtrando el ruido de la calle o cafés ruidosos.</p>
+                    </div>
+                    <div class="flex-1 w-full h-64 bg-zinc-800 rounded-3xl border border-white/5 flex items-center justify-center">
+                        <span class="text-gray-600 italic">[Render 3D: Aislamiento de voz]</span>
+                    </div>
+                </div>
+                </div>
+        </div>
+    </section>
+
+    <section id="comparativa" class="py-24 px-6 max-w-4xl mx-auto">
+        <div class="glass overflow-hidden rounded-3xl">
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="border-b border-white/10">
+                        <th class="p-6 text-sm uppercase tracking-wider text-gray-500">Experiencia</th>
+                        <th class="p-6 text-sm uppercase tracking-wider text-gray-500">Móvil</th>
+                        <th class="p-6 text-sm uppercase tracking-wider text-blue-500 font-bold">AURA</th>
+                    </tr>
+                </thead>
+                <tbody class="text-gray-300">
+                    <tr class="border-b border-white/5">
+                        <td class="p-6 font-medium">Contacto Visual</td>
+                        <td class="p-6">Roto (miras pantalla)</td>
+                        <td class="p-6 text-white font-bold">Total y humano</td>
+                    </tr>
+                    <tr class="border-b border-white/5">
+                        <td class="p-6 font-medium">Fluidez</td>
+                        <td class="p-6">Pausas incómodas</td>
+                        <td class="p-6 text-white font-bold">Tiempo real</td>
+                    </tr>
+                    <tr>
+                        <td class="p-6 font-medium">Manos</td>
+                        <td class="p-6">Ocupadas</td>
+                        <td class="p-6 text-white font-bold">100% Libres</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="py-24 px-6">
+        <div class="max-w-4xl mx-auto glass p-12 rounded-[3rem] text-center border-blue-500/20 shadow-2xl">
+            <h2 class="text-4xl md:text-5xl font-bold mb-6">No vuelvas a quedarte sin palabras.</h2>
+            <p class="text-gray-400 mb-10 text-lg">Únete a la lista de espera exclusiva. Las primeras 500 unidades incluyen el módulo de idiomas offline de por vida.</p>
+            <form class="flex flex-col md:flex-row gap-4 max-w-md mx-auto">
+                <input type="email" placeholder="Tu email" class="flex-1 bg-white/5 border border-white/10 px-6 py-4 rounded-full focus:outline-none focus:border-blue-500 transition">
+                <button class="bg-blue-600 text-white px-8 py-4 rounded-full font-bold cta-glow">Quiero mi acceso</button>
+            </form>
+        </div>
+    </section>
+
+    <footer class="py-12 border-t border-white/5 text-center text-gray-600 text-sm">
+        <p>&copy; 2026 AURA Technology. Todos los derechos reservados.</p>
+    </footer>
+
+</body>
+</html>

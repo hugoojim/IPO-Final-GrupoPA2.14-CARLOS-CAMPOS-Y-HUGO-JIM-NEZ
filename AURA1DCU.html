@@ -1,0 +1,2561 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aura Pro | Interface UX v6</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #040404;
+            --bg-sidebar: #10271f;
+            --panel: rgba(255, 255, 255, 0.06);
+            --panel-strong: rgba(255, 255, 255, 0.1);
+            --border: rgba(255, 255, 255, 0.12);
+            --border-strong: rgba(0, 255, 102, 0.35);
+            --accent: #00ff66;
+            --accent-soft: #36d98c;
+            --accent-emerald: #10b981;
+            --accent-muted: rgba(0, 255, 102, 0.12);
+            --text-main: #eef2ef;
+            --text-soft: #9fb0a7;
+            --text-dim: #73837b;
+            --danger: #ff5f6d;
+            --shadow: 0 20px 70px rgba(0, 0, 0, 0.45);
+            --radius-xl: 28px;
+            --radius-lg: 18px;
+            --radius-md: 14px;
+            --sidebar-width: 300px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: "Inter", sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(0,255,102,0.08), transparent 24%),
+                radial-gradient(circle at 85% 15%, rgba(0,255,102,0.06), transparent 18%),
+                linear-gradient(135deg, #020202 0%, #06110c 45%, #020202 100%);
+            color: var(--text-main);
+            display: flex;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background:
+                linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+            background-size: 28px 28px;
+            pointer-events: none;
+            mask-image: radial-gradient(circle at center, black 35%, transparent 90%);
+            z-index: 0;
+        }
+
+        aside {
+            width: var(--sidebar-width);
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 20;
+            padding: 28px 26px;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(180deg, rgba(16,39,31,0.96), rgba(9,20,16,0.96));
+            border-right: 1px solid rgba(0,255,102,0.2);
+            backdrop-filter: blur(16px);
+            box-shadow: 16px 0 40px rgba(0,0,0,0.35);
+            transition: transform 0.45s ease;
+        }
+
+        .sidebar-hidden aside {
+            transform: translateX(-100%);
+        }
+
+        .toggle-btn {
+            background: linear-gradient(135deg, var(--accent), var(--accent-soft));
+            color: #02170b;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 0.76rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease;
+        }
+
+        .toggle-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 12px 26px rgba(0,255,102,0.22);
+        }
+
+        .open-menu-btn {
+            position: fixed;
+            top: 20px;
+            left: -180px;
+            z-index: 30;
+            transition: left 0.45s ease;
+        }
+
+        .sidebar-hidden .open-menu-btn {
+            left: 20px;
+        }
+
+        .brand {
+            margin: 34px 0 38px;
+        }
+
+        .logo {
+            font-size: 2.3rem;
+            font-weight: 900;
+            letter-spacing: -0.06em;
+            color: white;
+        }
+
+        .brand-subtitle {
+            margin-top: 10px;
+            color: var(--text-soft);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            max-width: 220px;
+        }
+
+        .nav-menu {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .nav-menu a {
+            display: block;
+            text-decoration: none;
+            color: var(--text-soft);
+            padding: 12px 14px;
+            border-radius: 14px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease;
+        }
+
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            color: white;
+            background: rgba(255,255,255,0.06);
+            transform: translateX(4px);
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .version {
+            color: var(--accent);
+            font-size: 0.74rem;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .status-chip {
+            margin-top: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.06);
+            color: var(--text-soft);
+            font-size: 0.8rem;
+        }
+
+        .status-chip::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 10px var(--accent);
+        }
+
+        main {
+            position: relative;
+            z-index: 1;
+            margin-left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
+            padding: 0 72px;
+            transition: margin-left 0.45s ease, width 0.45s ease, padding 0.45s ease;
+        }
+
+        .sidebar-hidden main {
+            margin-left: 0;
+            width: 100%;
+            padding: 0 72px;
+        }
+
+        section {
+            min-height: 100vh;
+            padding: 120px 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            transform: translateY(22px);
+            transition: 0.75s ease-out;
+            position: relative;
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .divider {
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 102, 0.2) 20%, rgba(0, 255, 102, 0.2) 80%, transparent);
+            margin-top: 80px;
+            box-shadow: 0 0 10px rgba(0, 255, 102, 0.05);
+        }
+
+        .tag {
+            color: var(--accent);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            font-size: 0.72rem;
+            margin-bottom: 18px;
+        }
+
+        h2 {
+            font-size: clamp(3rem, 6vw, 6rem);
+            color: var(--text-main);
+            font-weight: 900;
+            line-height: 0.9;
+            margin-bottom: 28px;
+            letter-spacing: -4px;
+        }
+
+        h2 span {
+            background: linear-gradient(135deg, var(--accent), var(--accent-emerald));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: var(--accent);
+        }
+
+        .description {
+            font-size: 1.16rem;
+            line-height: 1.8;
+            max-width: 900px;
+            margin-bottom: 34px;
+            color: #a9b4ae;
+        }
+
+        .cta-row {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .primary-btn,
+        .secondary-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            padding: 16px 24px;
+            border-radius: 14px;
+            font-weight: 800;
+            letter-spacing: 0.03em;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+        }
+
+        .primary-btn {
+            background: linear-gradient(135deg, var(--accent), var(--accent-soft));
+            color: #03120a;
+            box-shadow: 0 14px 30px rgba(0,255,102,0.16);
+        }
+
+        .primary-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 34px rgba(0,255,102,0.24);
+        }
+
+        .secondary-btn {
+            border: 1px solid rgba(255,255,255,0.12);
+            background: rgba(255,255,255,0.04);
+            color: var(--text-main);
+        }
+
+        .secondary-btn:hover {
+            transform: translateY(-2px);
+            border-color: rgba(0,255,102,0.25);
+            background: rgba(255,255,255,0.06);
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .feature-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 34px;
+            border-radius: 20px;
+            transition: all 0.35s ease;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(12px);
+        }
+
+        .feature-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at top right, var(--accent-muted), transparent 50%);
+            opacity: 0;
+            transition: opacity 0.35s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(0,255,102,0.22);
+            box-shadow: 0 16px 30px rgba(0,0,0,0.22);
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-card h4 {
+            color: var(--accent);
+            font-size: 1.32rem;
+            margin-bottom: 12px;
+            font-weight: 800;
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-card p {
+            color: #9eaaa3;
+            line-height: 1.7;
+            font-size: 0.98rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .auth-section {
+            padding-top: 110px;
+            padding-bottom: 110px;
+        }
+
+        .auth-shell {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1.05fr 1fr;
+            gap: 30px;
+            align-items: stretch;
+        }
+
+        .hero-panel,
+        .auth-panel {
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--radius-xl);
+            background: var(--panel);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow);
+        }
+
+        .hero-panel {
+            padding: 52px;
+            min-height: 720px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background:
+                radial-gradient(circle at 15% 20%, rgba(0,255,102,0.16), transparent 28%),
+                radial-gradient(circle at 90% 20%, rgba(255,255,255,0.05), transparent 20%),
+                linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+        }
+
+        .hero-top {
+            max-width: 560px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 22px;
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.06);
+            color: var(--accent);
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+        }
+
+        .hero-title {
+            font-size: clamp(2.8rem, 5vw, 4.7rem);
+            line-height: 0.95;
+            letter-spacing: -0.06em;
+            font-weight: 900;
+            color: white;
+        }
+
+        .hero-title span {
+            background: linear-gradient(135deg, #ffffff 0%, var(--accent) 55%, #8fffc0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-description {
+            margin-top: 26px;
+            font-size: 1.06rem;
+            line-height: 1.8;
+            color: var(--text-soft);
+            max-width: 540px;
+        }
+
+        .hero-metrics {
+            margin-top: 34px;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .metric-card {
+            padding: 18px;
+            border-radius: 18px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .metric-card strong {
+            display: block;
+            font-size: 1.35rem;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .metric-card span {
+            color: var(--text-soft);
+            font-size: 0.88rem;
+            line-height: 1.5;
+        }
+
+        .hero-bottom {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+            margin-top: 36px;
+        }
+
+        .mini-card {
+            padding: 18px 20px;
+            border-radius: 18px;
+            background: rgba(0, 0, 0, 0.24);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .mini-card small {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--accent);
+            font-size: 0.75rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .mini-card p {
+            color: var(--text-soft);
+            line-height: 1.6;
+            font-size: 0.92rem;
+        }
+
+        .auth-panel {
+            padding: 26px;
+            min-height: 720px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .auth-topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .auth-topbar h3 {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: white;
+        }
+
+        .auth-topbar p {
+            color: var(--text-dim);
+            font-size: 0.94rem;
+        }
+
+        .mode-switch {
+            position: relative;
+            display: inline-grid;
+            grid-template-columns: 1fr 1fr;
+            padding: 6px;
+            width: 100%;
+            max-width: 360px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            margin-bottom: 22px;
+        }
+
+        .mode-switch-indicator {
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            width: calc(50% - 6px);
+            height: calc(100% - 12px);
+            border-radius: 999px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-soft));
+            transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+            box-shadow: 0 10px 28px rgba(0,255,102,0.18);
+        }
+
+        .auth-wrapper.register-mode .mode-switch-indicator {
+            transform: translateX(100%);
+        }
+
+        .switch-btn {
+            position: relative;
+            z-index: 1;
+            border: none;
+            background: transparent;
+            color: var(--text-soft);
+            padding: 14px 18px;
+            border-radius: 999px;
+            font-weight: 800;
+            font-size: 0.92rem;
+            cursor: pointer;
+            transition: color 0.25s ease;
+        }
+
+        .switch-btn.active {
+            color: #03120a;
+        }
+
+        .auth-wrapper {
+            position: relative;
+            overflow: hidden;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .forms-track {
+            display: flex;
+            width: 200%;
+            flex: 1;
+            transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .auth-wrapper.register-mode .forms-track {
+            transform: translateX(-50%);
+        }
+
+        .form-panel {
+            width: 50%;
+            padding: 18px 8px 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .form-card {
+            width: 100%;
+            max-width: 520px;
+            margin: 0 auto;
+        }
+
+        .form-badge {
+            display: inline-block;
+            margin-bottom: 14px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(0,255,102,0.1);
+            color: var(--accent);
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .form-title {
+            font-size: 2rem;
+            line-height: 1;
+            font-weight: 900;
+            letter-spacing: -0.05em;
+            color: white;
+        }
+
+        .form-subtitle {
+            margin-top: 14px;
+            margin-bottom: 28px;
+            color: var(--text-soft);
+            line-height: 1.7;
+            font-size: 0.98rem;
+        }
+
+        .form-grid {
+            display: grid;
+            gap: 16px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .field-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .field label {
+            font-size: 0.88rem;
+            color: #d9e5de;
+            font-weight: 700;
+        }
+
+        .input-wrap {
+            position: relative;
+        }
+
+        .input-wrap input {
+            width: 100%;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.04);
+            color: white;
+            padding: 16px 18px;
+            border-radius: 16px;
+            outline: none;
+            font-size: 0.98rem;
+            transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease, transform 0.25s ease;
+        }
+
+        .input-wrap input::placeholder {
+            color: #7f9087;
+        }
+
+        .input-wrap input:focus {
+            border-color: var(--border-strong);
+            background: rgba(255,255,255,0.06);
+            box-shadow: 0 0 0 4px rgba(0,255,102,0.08);
+            transform: translateY(-1px);
+        }
+
+        .field.error input {
+            border-color: rgba(255,95,109,0.85);
+            box-shadow: 0 0 0 4px rgba(255,95,109,0.1);
+        }
+
+        .field.success input {
+            border-color: rgba(0,255,102,0.45);
+        }
+
+        .error-text {
+            min-height: 18px;
+            font-size: 0.8rem;
+            color: var(--danger);
+            padding-left: 4px;
+        }
+
+        .form-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-top: 4px;
+            margin-bottom: 6px;
+            flex-wrap: wrap;
+        }
+
+        .check-wrap {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-soft);
+            font-size: 0.9rem;
+        }
+
+        .check-wrap input {
+            accent-color: var(--accent);
+            width: 16px;
+            height: 16px;
+        }
+
+        .text-link {
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .text-link:hover {
+            text-decoration: underline;
+        }
+
+        .submit-btn {
+            margin-top: 12px;
+            position: relative;
+            border: none;
+            width: 100%;
+            padding: 17px 18px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-soft));
+            color: #04120a;
+            font-weight: 900;
+            font-size: 0.95rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            cursor: pointer;
+            overflow: hidden;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 30px rgba(0,255,102,0.2);
+        }
+
+        .submit-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.85;
+        }
+
+        .btn-content,
+        .btn-loading {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+
+        .btn-loading {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transform: translateY(8px);
+        }
+
+        .submit-btn.loading .btn-content {
+            opacity: 0;
+            transform: translateY(-8px);
+        }
+
+        .submit-btn.loading .btn-loading {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(4,18,10,0.28);
+            border-top-color: #04120a;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        .form-footer {
+            margin-top: 18px;
+            color: var(--text-soft);
+            text-align: center;
+            font-size: 0.92rem;
+        }
+
+        .form-footer button {
+            background: transparent;
+            border: none;
+            color: var(--accent);
+            font-weight: 800;
+            cursor: pointer;
+            font-size: inherit;
+        }
+
+        .form-footer button:hover {
+            text-decoration: underline;
+        }
+
+        .panel-note {
+            margin-top: 22px;
+            padding: 16px 18px;
+            border-radius: 16px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+
+        .floating-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(18px);
+            opacity: 0.45;
+            pointer-events: none;
+        }
+
+        .orb-1 {
+            width: 160px;
+            height: 160px;
+            top: -40px;
+            right: -20px;
+            background: rgba(0,255,102,0.16);
+        }
+
+        .orb-2 {
+            width: 120px;
+            height: 120px;
+            bottom: 30px;
+            left: -20px;
+            background: rgba(255,255,255,0.06);
+        }
+
+        .voice-lab {
+            background:
+                radial-gradient(circle at top right, rgba(0,255,102,0.14), transparent 28%),
+                linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.03));
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 30px;
+            padding: 38px;
+            backdrop-filter: blur(18px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.34);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .voice-topbar {
+            display: flex;
+            justify-content: space-between;
+            gap: 24px;
+            align-items: flex-start;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+        }
+
+        .voice-kicker {
+            color: var(--accent);
+            font-size: 0.78rem;
+            font-weight: 900;
+            letter-spacing: 0.14em;
+            margin-bottom: 12px;
+        }
+
+        .voice-intro {
+            max-width: 760px;
+            color: var(--text-soft);
+            line-height: 1.75;
+            font-size: 1rem;
+        }
+
+        .voice-lang-config {
+            display: flex;
+            align-items: end;
+            gap: 14px;
+            flex-wrap: wrap;
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .voice-select-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-width: 220px;
+            flex: 1;
+        }
+
+        .voice-select-group label {
+            color: var(--text-soft);
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+        }
+
+        .voice-select {
+            width: 100%;
+            appearance: none;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.035));
+            color: white;
+            padding: 15px 18px;
+            border-radius: 16px;
+            outline: none;
+            font-size: 0.96rem;
+            font-weight: 600;
+            transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+            cursor: pointer;
+        }
+
+        .voice-select:focus {
+            border-color: var(--border-strong);
+            box-shadow: 0 0 0 4px rgba(0,255,102,0.08);
+            transform: translateY(-1px);
+        }
+
+        .voice-select option {
+            background: #0a120e;
+            color: white;
+        }
+
+        .voice-swap-btn {
+            min-width: 120px;
+            height: 52px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05);
+            color: white;
+            border-radius: 16px;
+            font-size: 0.88rem;
+            font-weight: 900;
+            letter-spacing: 0.06em;
+            cursor: pointer;
+            transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .voice-swap-btn:hover {
+            transform: translateY(-2px);
+            border-color: rgba(0,255,102,0.22);
+            background: rgba(0,255,102,0.08);
+            box-shadow: 0 12px 28px rgba(0,255,102,0.12);
+        }
+
+        .voice-swap-btn:active {
+            transform: scale(0.98);
+        }
+
+        .voice-lang-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px 18px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            margin-bottom: 24px;
+        }
+
+        .voice-lang-item {
+            min-width: 92px;
+        }
+
+        .voice-lang-item small {
+            display: block;
+            color: var(--text-dim);
+            font-size: 0.74rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 6px;
+        }
+
+        .voice-lang-item strong {
+            display: block;
+            color: white;
+            font-size: 1rem;
+            margin-bottom: 4px;
+        }
+
+        .voice-lang-item span {
+            color: var(--accent);
+            font-size: 0.82rem;
+            font-weight: 700;
+        }
+
+        .voice-lang-arrow {
+            color: var(--accent);
+            font-size: 1.1rem;
+            font-weight: 900;
+        }
+
+        .voice-controls {
+            display: flex;
+            align-items: center;
+            gap: 26px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .voice-trigger {
+            position: relative;
+            min-width: 270px;
+            display: inline-flex;
+            align-items: center;
+            gap: 16px;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 22px;
+            padding: 18px 22px;
+            background: rgba(255,255,255,0.05);
+            color: white;
+            cursor: pointer;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+            overflow: hidden;
+        }
+
+        .voice-trigger:hover {
+            transform: translateY(-2px);
+            border-color: rgba(0,255,102,0.22);
+            box-shadow: 0 16px 34px rgba(0,0,0,0.25);
+        }
+
+        .voice-trigger:disabled {
+            cursor: not-allowed;
+            opacity: 0.72;
+        }
+
+        .voice-trigger-ring {
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            pointer-events: none;
+        }
+
+        .voice-trigger-core {
+            width: 58px;
+            height: 58px;
+            min-width: 58px;
+            border-radius: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--accent), var(--accent-soft));
+            color: #03120a;
+            box-shadow: 0 12px 28px rgba(0,255,102,0.22);
+            position: relative;
+            z-index: 1;
+        }
+
+        .voice-trigger-icon {
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+
+        .voice-trigger-text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            position: relative;
+            z-index: 1;
+        }
+
+        .voice-trigger-title {
+            font-size: 1rem;
+            font-weight: 900;
+            letter-spacing: 0.02em;
+        }
+
+        .voice-trigger-subtitle {
+            margin-top: 5px;
+            font-size: 0.88rem;
+            color: var(--text-soft);
+        }
+
+        .voice-trigger.is-listening {
+            border-color: rgba(0,255,102,0.32);
+            background: rgba(0,255,102,0.08);
+            box-shadow: 0 0 0 4px rgba(0,255,102,0.08), 0 18px 40px rgba(0,255,102,0.12);
+        }
+
+        .voice-trigger.is-listening .voice-trigger-ring {
+            animation: voicePulse 1.6s ease-out infinite;
+            background: radial-gradient(circle, rgba(0,255,102,0.18) 0%, rgba(0,255,102,0.06) 45%, transparent 72%);
+        }
+
+        .voice-trigger.is-processing {
+            border-color: rgba(255,255,255,0.16);
+            background: rgba(255,255,255,0.08);
+        }
+
+        .voice-trigger.is-ready .voice-trigger-core {
+            background: linear-gradient(135deg, #ffffff, var(--accent));
+        }
+
+        .voice-visualizer {
+            height: 64px;
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            padding: 10px 14px;
+            border-radius: 18px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            opacity: 0.42;
+            transition: opacity 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .voice-visualizer span {
+            width: 8px;
+            height: 14px;
+            border-radius: 999px;
+            background: linear-gradient(180deg, #9effc0, var(--accent));
+            transform-origin: bottom;
+        }
+
+        .voice-visualizer.is-active {
+            opacity: 1;
+            transform: translateY(-2px);
+            border-color: rgba(0,255,102,0.22);
+        }
+
+        .voice-visualizer.is-active span {
+            animation: voiceBars 0.9s ease-in-out infinite;
+        }
+
+        .voice-visualizer.is-active span:nth-child(2) { animation-delay: 0.1s; }
+        .voice-visualizer.is-active span:nth-child(3) { animation-delay: 0.2s; }
+        .voice-visualizer.is-active span:nth-child(4) { animation-delay: 0.3s; }
+        .voice-visualizer.is-active span:nth-child(5) { animation-delay: 0.4s; }
+        .voice-visualizer.is-active span:nth-child(6) { animation-delay: 0.5s; }
+
+        .voice-status,
+        .voice-error {
+            border-radius: 16px;
+            padding: 14px 16px;
+            margin-bottom: 20px;
+            font-size: 0.94rem;
+            line-height: 1.6;
+            transition: all 0.25s ease;
+        }
+
+        .voice-status {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            color: var(--text-soft);
+        }
+
+        .voice-status.is-listening {
+            background: rgba(0,255,102,0.08);
+            border-color: rgba(0,255,102,0.2);
+            color: #d8ffe8;
+        }
+
+        .voice-status.is-processing {
+            background: rgba(255,255,255,0.07);
+            border-color: rgba(255,255,255,0.12);
+            color: white;
+        }
+
+        .voice-status.is-ready {
+            background: rgba(0,255,102,0.07);
+            border-color: rgba(0,255,102,0.18);
+            color: #dbffeb;
+        }
+
+        .voice-error {
+            background: rgba(255,95,109,0.08);
+            border: 1px solid rgba(255,95,109,0.2);
+            color: #ffc8ce;
+        }
+
+        .voice-results {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .voice-result-card {
+            border-radius: 22px;
+            padding: 22px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            min-height: 220px;
+            transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .voice-result-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(255,255,255,0.12);
+        }
+
+        .voice-result-card.translated {
+            background: rgba(0,255,102,0.05);
+            border-color: rgba(0,255,102,0.12);
+        }
+
+        .voice-result-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .voice-result-head small {
+            color: var(--accent);
+            font-size: 0.78rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .voice-badge {
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.06);
+            color: var(--text-soft);
+            font-size: 0.78rem;
+            font-weight: 700;
+        }
+
+        .voice-result-text {
+            color: white;
+            font-size: 1.02rem;
+            line-height: 1.8;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.35s ease, transform 0.35s ease, color 0.25s ease;
+        }
+
+        .voice-result-text.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .voice-result-text.is-empty {
+            opacity: 1;
+            transform: none;
+            color: var(--text-dim);
+        }
+
+        .voice-footer-note {
+            margin-top: 18px;
+            color: var(--text-dim);
+            font-size: 0.88rem;
+            line-height: 1.6;
+        }
+
+        .toast-stack {
+            position: fixed;
+            right: 22px;
+            bottom: 22px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            pointer-events: none;
+        }
+
+        .toast {
+            min-width: 280px;
+            max-width: 360px;
+            padding: 14px 16px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(9, 20, 16, 0.88);
+            backdrop-filter: blur(16px);
+            color: white;
+            box-shadow: 0 18px 40px rgba(0,0,0,0.3);
+            transform: translateY(20px);
+            opacity: 0;
+            animation: toastIn 0.35s ease forwards;
+        }
+
+        .toast.success {
+            border-color: rgba(0,255,102,0.18);
+        }
+
+        .toast.error {
+            border-color: rgba(255,95,109,0.18);
+        }
+
+        footer {
+            padding: 90px 0 70px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+
+        footer p {
+            color: var(--text-soft);
+            margin-top: 16px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes voiceBars {
+            0%, 100% { height: 12px; opacity: 0.55; }
+            25% { height: 48px; opacity: 1; }
+            50% { height: 26px; opacity: 0.8; }
+            75% { height: 58px; opacity: 1; }
+        }
+
+        @keyframes voicePulse {
+            0% {
+                transform: scale(0.96);
+                opacity: 0.15;
+            }
+            60% {
+                transform: scale(1.02);
+                opacity: 0.42;
+            }
+            100% {
+                transform: scale(1.08);
+                opacity: 0;
+            }
+        }
+
+        @keyframes toastIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 1180px) {
+            .auth-shell {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-panel,
+            .auth-panel {
+                min-height: auto;
+            }
+
+            .hero-panel {
+                padding: 38px;
+            }
+
+            .auth-panel {
+                padding: 24px;
+            }
+        }
+
+        @media (max-width: 980px) {
+            aside {
+                width: 88px;
+                padding: 22px 12px;
+            }
+
+            aside .brand-subtitle,
+            aside .nav-menu span,
+            aside .sidebar-footer .status-chip,
+            aside .sidebar-footer .version {
+                display: none;
+            }
+
+            .logo {
+                font-size: 1.55rem;
+                text-align: center;
+                letter-spacing: -0.04em;
+            }
+
+            main {
+                margin-left: 88px;
+                width: calc(100% - 88px);
+                padding: 0 28px;
+            }
+
+            .sidebar-hidden main {
+                padding: 0 28px;
+            }
+
+            .field-row,
+            .hero-metrics,
+            .hero-bottom,
+            .voice-results {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 920px) {
+            .voice-lang-card {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                display: block;
+            }
+
+            aside {
+                width: 280px;
+            }
+
+            main {
+                margin-left: 0;
+                width: 100%;
+                padding: 0 18px;
+            }
+
+            .sidebar-hidden main {
+                padding: 0 18px;
+            }
+
+            section {
+                padding: 92px 0;
+            }
+
+            .voice-lab,
+            .hero-panel {
+                padding: 24px 18px;
+            }
+
+            .auth-panel {
+                padding: 18px 14px;
+            }
+
+            .form-panel {
+                padding: 12px 2px 2px;
+            }
+
+            .form-title {
+                font-size: 1.7rem;
+            }
+
+            .hero-title {
+                font-size: 2.35rem;
+            }
+
+            .mode-switch {
+                max-width: 100%;
+            }
+
+            .cta-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .cta-row a {
+                width: 100%;
+            }
+
+            .voice-controls {
+                align-items: stretch;
+            }
+
+            .voice-trigger {
+                width: 100%;
+                min-width: 0;
+            }
+
+            .voice-visualizer {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .voice-lang-card,
+            .voice-lang-config {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .voice-select-group {
+                min-width: 100%;
+            }
+
+            .voice-swap-btn {
+                width: 100%;
+                min-width: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .open-menu-btn {
+                top: 14px;
+            }
+
+            .hero-panel,
+            .auth-panel,
+            .voice-lab {
+                border-radius: 22px;
+            }
+
+            .input-wrap input {
+                padding: 15px 16px;
+            }
+
+            .submit-btn {
+                padding: 16px;
+            }
+
+            h2 {
+                letter-spacing: -2px;
+            }
+
+            .toast {
+                min-width: 0;
+                max-width: calc(100vw - 32px);
+            }
+        }
+    </style>
+</head>
+<body id="main-body">
+    <button class="toggle-btn open-menu-btn" onclick="toggleSidebar()">☰ Abrir menú</button>
+
+    <aside id="sidebar">
+        <button class="toggle-btn" onclick="toggleSidebar()">✕ Ocultar menú</button>
+
+        <div class="brand">
+            <div class="logo">Aura</div>
+            <p class="brand-subtitle">
+                Interfaz avanzada de traducción y acceso inteligente con una experiencia visual moderna.
+            </p>
+        </div>
+
+        <nav>
+            <ul class="nav-menu">
+                <li><a href="#vision" class="active"><span>Vision</span></a></li>
+                <li><a href="#ingenieria"><span>Engineering</span></a></li>
+                <li><a href="#experiencia"><span>Real Cases</span></a></li>
+                <li><a href="#simulador"><span>Voice Engine</span></a></li>
+                <li><a href="#auth"><span>Access</span></a></li>
+            </ul>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="version">Aura Pro // v6.0</div>
+            <div class="status-chip">Sistema listo</div>
+        </div>
+    </aside>
+
+    <main>
+        <section id="vision">
+            <span class="tag">// Global Philosophy</span>
+            <h2>Voz sin <span>fronteras.</span></h2>
+            <p class="description">
+                Aura nace para eliminar la fricción entre personas, idiomas y contextos. No se limita a traducir mensajes, sino que construye una experiencia de comunicación más natural, más rápida y mucho más humana.
+            </p>
+            <div class="cta-row">
+                <a href="#simulador" class="secondary-btn">Ver simulación</a>
+                <a href="#auth" class="primary-btn">Acceder al portal Aura</a>
+            </div>
+            <div class="divider"></div>
+        </section>
+
+        <section id="ingenieria">
+            <span class="tag">// Hard-Tech Solution</span>
+            <h2>Ingeniería <span>L1-Quantum.</span></h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Micro-Latencia</h4>
+                    <p>Reducción del tiempo de respuesta hasta un flujo casi inmediato, eliminando la pausa perceptible entre la escucha, el análisis y la reconstrucción del mensaje.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Clonación Tímbrica</h4>
+                    <p>La salida de voz mantiene una identidad sonora cercana al hablante original, reforzando la empatía y la naturalidad de cada interacción.</p>
+                </div>
+            </div>
+            <div class="divider"></div>
+        </section>
+
+        <section id="experiencia">
+            <span class="tag">// Solving Real Needs</span>
+            <h2>Impacto <span>Humano.</span></h2>
+            <p class="description">
+                Aura está pensado para resolver escenarios reales donde la barrera idiomática afecta al rendimiento, a la confianza y a la experiencia del usuario.
+            </p>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Entorno Laboral</h4>
+                    <p>Reuniones internacionales, comunicación con clientes y presentaciones sin perder seguridad ni ritmo conversacional.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Turismo y Comercio</h4>
+                    <p>Interacciones rápidas y fluidas en entornos de atención al público, evitando interrupciones y mejorando la calidad de servicio.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Estudiantes Erasmus</h4>
+                    <p>Comprensión más clara de clases, tutorías y contextos académicos en tiempo real, con una experiencia más accesible.</p>
+                </div>
+            </div>
+            <div class="divider"></div>
+        </section>
+
+        <section id="simulador">
+            <span class="tag">// Voice Translation Engine</span>
+            <h2>Prueba el <span>Motor.</span></h2>
+
+            <div class="voice-lab">
+                <div class="voice-topbar">
+                    <div>
+                        <p class="voice-kicker">TRADUCCIÓN POR VOZ BIDIRECCIONAL</p>
+                        <p class="voice-intro">
+                            Selecciona idioma de origen y destino, pulsa el botón y Aura transcribirá, traducirá y reproducirá automáticamente el resultado en cualquiera de las combinaciones disponibles.
+                        </p>
+                    </div>
+
+                    <div class="voice-lang-config">
+                        <div class="voice-select-group">
+                            <label for="sourceLanguage">Origen</label>
+                            <select id="sourceLanguage" class="voice-select"></select>
+                        </div>
+
+                        <button id="swapLanguages" class="voice-swap-btn" type="button">⇄ SWAP</button>
+
+                        <div class="voice-select-group">
+                            <label for="targetLanguage">Destino</label>
+                            <select id="targetLanguage" class="voice-select"></select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="voice-lang-card">
+                    <div class="voice-lang-item">
+                        <small>Entrada</small>
+                        <strong id="sourceLanguageLabel">Español</strong>
+                        <span id="sourceLanguageCode">es-ES</span>
+                    </div>
+                    <div class="voice-lang-arrow">→</div>
+                    <div class="voice-lang-item">
+                        <small>Salida</small>
+                        <strong id="targetLanguageLabel">Inglés</strong>
+                        <span id="targetLanguageCode">en-US</span>
+                    </div>
+                </div>
+
+                <div class="voice-controls">
+                    <button id="voiceTrigger" class="voice-trigger" type="button">
+                        <span class="voice-trigger-ring"></span>
+                        <span class="voice-trigger-core">
+                            <span class="voice-trigger-icon">🎙</span>
+                        </span>
+                        <span class="voice-trigger-text">
+                            <span class="voice-trigger-title">Hablar</span>
+                            <span class="voice-trigger-subtitle">Pulsa para empezar</span>
+                        </span>
+                    </button>
+
+                    <div class="voice-visualizer" id="voiceVisualizer" aria-hidden="true">
+                        <span></span><span></span><span></span><span></span><span></span><span></span>
+                    </div>
+                </div>
+
+                <div id="voiceStatus" class="voice-status is-idle">
+                    Sistema listo. Esperando interacción del usuario.
+                </div>
+
+                <div id="voiceError" class="voice-error" hidden></div>
+
+                <div class="voice-results">
+                    <article class="voice-result-card">
+                        <div class="voice-result-head">
+                            <small>Lo que dije</small>
+                            <span id="transcriptBadge" class="voice-badge">Sin captura</span>
+                        </div>
+                        <p id="transcriptOutput" class="voice-result-text is-empty">
+                            Aquí aparecerá la transcripción detectada desde el micrófono.
+                        </p>
+                    </article>
+
+                    <article class="voice-result-card translated">
+                        <div class="voice-result-head">
+                            <small>Traducción</small>
+                            <span id="translationBadge" class="voice-badge">Sin traducir</span>
+                        </div>
+                        <p id="translationOutput" class="voice-result-text is-empty">
+                            Aquí aparecerá la traducción y se reproducirá por voz automáticamente.
+                        </p>
+                    </article>
+                </div>
+
+                <div class="voice-footer-note">
+                    Recomendación: abre el archivo con Live Server o en HTTPS para que el micrófono funcione correctamente.
+                </div>
+            </div>
+
+            <div class="divider"></div>
+        </section>
+
+        <section id="auth" class="auth-section">
+            <span class="tag">// Access Portal</span>
+            <h2>Acceso <span>Aura.</span></h2>
+
+            <div class="auth-shell">
+                <section class="hero-panel">
+                    <div class="floating-orb orb-1"></div>
+                    <div class="floating-orb orb-2"></div>
+
+                    <div class="hero-top">
+                        <div class="eyebrow">Aura secure access</div>
+                        <h1 class="hero-title">
+                            Acceso moderno para una experiencia <span>más clara y más sólida</span>
+                        </h1>
+                        <p class="hero-description">
+                            Una interfaz de autenticación diseñada con enfoque UI UX actual: jerarquía visual limpia, interacción fluida, feedback inmediato y estética premium en dark mode con efecto glassmorphism.
+                        </p>
+
+                        <div class="hero-metrics">
+                            <div class="metric-card">
+                                <strong>Fluid UI</strong>
+                                <span>Transición animada entre inicio de sesión y registro.</span>
+                            </div>
+                            <div class="metric-card">
+                                <strong>Smart Feedback</strong>
+                                <span>Estados visuales claros en foco, error y envío.</span>
+                            </div>
+                            <div class="metric-card">
+                                <strong>Responsive</strong>
+                                <span>Adaptado para escritorio, tablet y móvil.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="hero-bottom">
+                        <div class="mini-card">
+                            <small>Diseño</small>
+                            <p>Capas translúcidas, bordes suaves, profundidad visual y contraste equilibrado.</p>
+                        </div>
+                        <div class="mini-card">
+                            <small>Experiencia</small>
+                            <p>La navegación entre formularios es inmediata, clara y con microinteracciones consistentes.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="auth-panel">
+                    <div class="auth-topbar">
+                        <div>
+                            <h3>Portal de acceso</h3>
+                            <p>Simulación visual funcional con login y registro.</p>
+                        </div>
+                    </div>
+
+                    <div class="auth-wrapper" id="authWrapper">
+                        <div class="mode-switch">
+                            <div class="mode-switch-indicator"></div>
+                            <button class="switch-btn active" type="button" data-mode="login">Iniciar sesión</button>
+                            <button class="switch-btn" type="button" data-mode="register">Crear cuenta</button>
+                        </div>
+
+                        <div class="forms-track">
+                            <div class="form-panel">
+                                <div class="form-card">
+                                    <div class="form-badge">Login</div>
+                                    <h3 class="form-title">Bienvenido de nuevo</h3>
+                                    <p class="form-subtitle">
+                                        Introduce tus credenciales para acceder al entorno privado de Aura.
+                                    </p>
+
+                                    <form id="loginForm" novalidate>
+                                        <div class="form-grid">
+                                            <div class="field" data-required>
+                                                <label for="loginEmail">Correo electrónico</label>
+                                                <div class="input-wrap">
+                                                    <input type="email" id="loginEmail" name="loginEmail" placeholder="nombre@correo.com">
+                                                </div>
+                                                <span class="error-text"></span>
+                                            </div>
+
+                                            <div class="field" data-required>
+                                                <label for="loginPassword">Contraseña</label>
+                                                <div class="input-wrap">
+                                                    <input type="password" id="loginPassword" name="loginPassword" placeholder="Introduce tu contraseña">
+                                                </div>
+                                                <span class="error-text"></span>
+                                            </div>
+
+                                            <div class="form-meta">
+                                                <label class="check-wrap">
+                                                    <input type="checkbox" name="remember">
+                                                    <span>Recordarme</span>
+                                                </label>
+                                                <a href="#" class="text-link">¿Has olvidado tu contraseña?</a>
+                                            </div>
+
+                                            <button class="submit-btn" type="submit">
+                                                <span class="btn-content">Entrar en Aura</span>
+                                                <span class="btn-loading">
+                                                    <span class="spinner"></span>
+                                                    Procesando...
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </form>
+
+                                    <div class="form-footer">
+                                        ¿Todavía no tienes cuenta?
+                                        <button type="button" data-switch="register">Crear cuenta</button>
+                                    </div>
+
+                                    <div class="panel-note">
+                                        Esta interacción simula el comportamiento visual de un flujo real de autenticación, incluyendo validación de campos y estado de carga en el botón.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-panel">
+                                <div class="form-card">
+                                    <div class="form-badge">Registro</div>
+                                    <h3 class="form-title">Crear nueva cuenta</h3>
+                                    <p class="form-subtitle">
+                                        Completa los datos para generar tu acceso y comenzar a utilizar la plataforma.
+                                    </p>
+
+                                    <form id="registerForm" novalidate>
+                                        <div class="form-grid">
+                                            <div class="field-row">
+                                                <div class="field" data-required>
+                                                    <label for="registerName">Nombre</label>
+                                                    <div class="input-wrap">
+                                                        <input type="text" id="registerName" name="registerName" placeholder="Tu nombre">
+                                                    </div>
+                                                    <span class="error-text"></span>
+                                                </div>
+
+                                                <div class="field" data-required>
+                                                    <label for="registerSurname">Apellidos</label>
+                                                    <div class="input-wrap">
+                                                        <input type="text" id="registerSurname" name="registerSurname" placeholder="Tus apellidos">
+                                                    </div>
+                                                    <span class="error-text"></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="field" data-required>
+                                                <label for="registerEmail">Correo electrónico</label>
+                                                <div class="input-wrap">
+                                                    <input type="email" id="registerEmail" name="registerEmail" placeholder="nombre@correo.com">
+                                                </div>
+                                                <span class="error-text"></span>
+                                            </div>
+
+                                            <div class="field-row">
+                                                <div class="field" data-required>
+                                                    <label for="registerPassword">Contraseña</label>
+                                                    <div class="input-wrap">
+                                                        <input type="password" id="registerPassword" name="registerPassword" placeholder="Mínimo 6 caracteres">
+                                                    </div>
+                                                    <span class="error-text"></span>
+                                                </div>
+
+                                                <div class="field" data-required>
+                                                    <label for="registerPassword2">Confirmar contraseña</label>
+                                                    <div class="input-wrap">
+                                                        <input type="password" id="registerPassword2" name="registerPassword2" placeholder="Repite la contraseña">
+                                                    </div>
+                                                    <span class="error-text"></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-meta">
+                                                <label class="check-wrap">
+                                                    <input type="checkbox" id="acceptTerms" name="acceptTerms">
+                                                    <span>Acepto términos y condiciones</span>
+                                                </label>
+                                            </div>
+
+                                            <button class="submit-btn" type="submit">
+                                                <span class="btn-content">Crear cuenta</span>
+                                                <span class="btn-loading">
+                                                    <span class="spinner"></span>
+                                                    Creando...
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </form>
+
+                                    <div class="form-footer">
+                                        ¿Ya tienes una cuenta?
+                                        <button type="button" data-switch="login">Iniciar sesión</button>
+                                    </div>
+
+                                    <div class="panel-note">
+                                        El registro incorpora comprobación visual de campos vacíos, validación básica de email, coincidencia de contraseñas y feedback inmediato.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </section>
+
+        <footer id="footer">
+            <h2>Aura</h2>
+            <p>Proyecto por Carlos Campos & Hugo Jiménez</p>
+            <p style="font-size: 0.82rem; opacity: 0.55;">Grado en Ingeniería Informática - Salamanca 2026</p>
+        </footer>
+    </main>
+
+    <div id="toastStack" class="toast-stack"></div>
+
+    <script>
+        function toggleSidebar() {
+            document.getElementById("main-body").classList.toggle("sidebar-hidden");
+        }
+
+        const observerOptions = { threshold: 0.18 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("visible");
+
+                    document.querySelectorAll(".nav-menu a").forEach((a) => {
+                        a.classList.remove("active");
+                        const href = a.getAttribute("href");
+                        if (href && href.substring(1) === entry.target.id) {
+                            a.classList.add("active");
+                        }
+                    });
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll("main section").forEach((section) => observer.observe(section));
+
+        function showToast(message, type = "success") {
+            const stack = document.getElementById("toastStack");
+            const toast = document.createElement("div");
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            stack.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = "0";
+                toast.style.transform = "translateY(20px)";
+                setTimeout(() => toast.remove(), 300);
+            }, 2600);
+        }
+
+        const authWrapper = document.getElementById("authWrapper");
+        const switchButtons = document.querySelectorAll(".switch-btn");
+        const switchLinks = document.querySelectorAll("[data-switch]");
+
+        function setMode(mode) {
+            if (mode === "register") {
+                authWrapper.classList.add("register-mode");
+            } else {
+                authWrapper.classList.remove("register-mode");
+            }
+
+            switchButtons.forEach((btn) => {
+                btn.classList.toggle("active", btn.dataset.mode === mode);
+            });
+        }
+
+        switchButtons.forEach((btn) => {
+            btn.addEventListener("click", () => setMode(btn.dataset.mode));
+        });
+
+        switchLinks.forEach((btn) => {
+            btn.addEventListener("click", () => setMode(btn.dataset.switch));
+        });
+
+        function validateEmail(value) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
+        }
+
+        function clearFieldState(field) {
+            field.classList.remove("error", "success");
+            const errorText = field.querySelector(".error-text");
+            if (errorText) errorText.textContent = "";
+        }
+
+        function setFieldError(field, message) {
+            field.classList.remove("success");
+            field.classList.add("error");
+            const errorText = field.querySelector(".error-text");
+            if (errorText) errorText.textContent = message;
+        }
+
+        function setFieldSuccess(field) {
+            field.classList.remove("error");
+            field.classList.add("success");
+            const errorText = field.querySelector(".error-text");
+            if (errorText) errorText.textContent = "";
+        }
+
+        function validateRequiredField(field) {
+            const input = field.querySelector("input");
+            if (!input) return true;
+
+            const value = input.value.trim();
+
+            if (value === "") {
+                setFieldError(field, "Este campo es obligatorio.");
+                return false;
+            }
+
+            if (input.type === "email" && !validateEmail(value)) {
+                setFieldError(field, "Introduce un correo válido.");
+                return false;
+            }
+
+            setFieldSuccess(field);
+            return true;
+        }
+
+        function attachLiveValidation(form) {
+            const fields = form.querySelectorAll(".field[data-required]");
+
+            fields.forEach((field) => {
+                const input = field.querySelector("input");
+                if (!input) return;
+
+                input.addEventListener("input", () => {
+                    if (field.classList.contains("error")) {
+                        validateRequiredField(field);
+                    } else if (input.value.trim() !== "") {
+                        if (input.type === "email" && !validateEmail(input.value.trim())) {
+                            setFieldError(field, "Introduce un correo válido.");
+                        } else {
+                            setFieldSuccess(field);
+                        }
+                    } else {
+                        clearFieldState(field);
+                    }
+                });
+
+                input.addEventListener("blur", () => {
+                    if (input.value.trim() !== "") {
+                        validateRequiredField(field);
+                    }
+                });
+            });
+        }
+
+        function setButtonLoading(button, loadingTextDuration = 1400) {
+            button.classList.add("loading");
+            button.disabled = true;
+
+            setTimeout(() => {
+                button.classList.remove("loading");
+                button.disabled = false;
+            }, loadingTextDuration);
+        }
+
+        const loginForm = document.getElementById("loginForm");
+        const registerForm = document.getElementById("registerForm");
+
+        attachLiveValidation(loginForm);
+        attachLiveValidation(registerForm);
+
+        loginForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            const fields = loginForm.querySelectorAll(".field[data-required]");
+            let isValid = true;
+
+            fields.forEach((field) => {
+                const ok = validateRequiredField(field);
+                if (!ok) isValid = false;
+            });
+
+            const submitBtn = loginForm.querySelector(".submit-btn");
+            if (!isValid) return;
+
+            setButtonLoading(submitBtn);
+
+            setTimeout(() => {
+                showToast("Inicio de sesión simulado correctamente.", "success");
+            }, 1450);
+        });
+
+        registerForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            const fields = registerForm.querySelectorAll(".field[data-required]");
+            let isValid = true;
+
+            fields.forEach((field) => {
+                const ok = validateRequiredField(field);
+                if (!ok) isValid = false;
+            });
+
+            const passwordField = document.getElementById("registerPassword").closest(".field");
+            const confirmField = document.getElementById("registerPassword2").closest(".field");
+            const password = document.getElementById("registerPassword").value.trim();
+            const confirmPassword = document.getElementById("registerPassword2").value.trim();
+            const acceptTerms = document.getElementById("acceptTerms");
+            const submitBtn = registerForm.querySelector(".submit-btn");
+
+            if (password !== "" && password.length < 6) {
+                setFieldError(passwordField, "La contraseña debe tener al menos 6 caracteres.");
+                isValid = false;
+            }
+
+            if (confirmPassword !== "" && password !== confirmPassword) {
+                setFieldError(confirmField, "Las contraseñas no coinciden.");
+                isValid = false;
+            }
+
+            if (!acceptTerms.checked) {
+                isValid = false;
+                showToast("Debes aceptar los términos y condiciones.", "error");
+            }
+
+            if (!isValid) return;
+
+            setButtonLoading(submitBtn, 1600);
+
+            setTimeout(() => {
+                showToast("Registro simulado correctamente.", "success");
+                registerForm.reset();
+                registerForm.querySelectorAll(".field").forEach(clearFieldState);
+                setMode("login");
+            }, 1650);
+        });
+
+        setMode("login");
+
+        const voiceTrigger = document.getElementById("voiceTrigger");
+        const voiceVisualizer = document.getElementById("voiceVisualizer");
+        const voiceStatus = document.getElementById("voiceStatus");
+        const voiceError = document.getElementById("voiceError");
+        const transcriptOutput = document.getElementById("transcriptOutput");
+        const translationOutput = document.getElementById("translationOutput");
+        const transcriptBadge = document.getElementById("transcriptBadge");
+        const translationBadge = document.getElementById("translationBadge");
+
+        const sourceLanguageSelect = document.getElementById("sourceLanguage");
+        const targetLanguageSelect = document.getElementById("targetLanguage");
+        const swapLanguagesButton = document.getElementById("swapLanguages");
+        const sourceLanguageLabel = document.getElementById("sourceLanguageLabel");
+        const sourceLanguageCode = document.getElementById("sourceLanguageCode");
+        const targetLanguageLabel = document.getElementById("targetLanguageLabel");
+        const targetLanguageCode = document.getElementById("targetLanguageCode");
+
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+        const supportedLanguages = {
+            es: { recognition: "es-ES", translate: "es", voice: "es", label: "Español" },
+            en: { recognition: "en-US", translate: "en", voice: "en", label: "Inglés" },
+            de: { recognition: "de-DE", translate: "de", voice: "de", label: "Alemán" },
+            fr: { recognition: "fr-FR", translate: "fr", voice: "fr", label: "Francés" },
+            pt: { recognition: "pt-BR", translate: "pt", voice: "pt", label: "Portugués (BR)" }
+        };
+
+        let recognition = null;
+        let isListening = false;
+        let finalTranscript = "";
+
+        function getSelectedLanguages() {
+            return {
+                sourceKey: sourceLanguageSelect.value,
+                targetKey: targetLanguageSelect.value,
+                source: supportedLanguages[sourceLanguageSelect.value],
+                target: supportedLanguages[targetLanguageSelect.value]
+            };
+        }
+
+        function populateLanguageSelectors() {
+            const options = Object.entries(supportedLanguages)
+                .map(([key, lang]) => `<option value="${key}">${lang.label}</option>`)
+                .join("");
+
+            sourceLanguageSelect.innerHTML = options;
+            targetLanguageSelect.innerHTML = options;
+
+            sourceLanguageSelect.value = "es";
+            targetLanguageSelect.value = "en";
+
+            syncLanguageSummary();
+        }
+
+        function syncLanguageSummary() {
+            const { source, target } = getSelectedLanguages();
+
+            sourceLanguageLabel.textContent = source.label;
+            sourceLanguageCode.textContent = source.recognition;
+
+            targetLanguageLabel.textContent = target.label;
+            targetLanguageCode.textContent = target.recognition;
+        }
+
+        function clearVoiceError() {
+            voiceError.hidden = true;
+            voiceError.textContent = "";
+        }
+
+        function showVoiceError(message) {
+            voiceError.hidden = false;
+            voiceError.textContent = message;
+        }
+
+        function updateVoiceStatus(type, message) {
+            voiceStatus.className = "voice-status";
+            if (type) voiceStatus.classList.add(type);
+            voiceStatus.textContent = message;
+        }
+
+        function updateVoiceButton(state) {
+            voiceTrigger.classList.remove("is-listening", "is-processing", "is-ready");
+
+            const title = voiceTrigger.querySelector(".voice-trigger-title");
+            const subtitle = voiceTrigger.querySelector(".voice-trigger-subtitle");
+            const icon = voiceTrigger.querySelector(".voice-trigger-icon");
+
+            if (state === "idle") {
+                voiceTrigger.disabled = false;
+                title.textContent = "Hablar";
+                subtitle.textContent = "Pulsa para empezar";
+                icon.textContent = "🎙";
+                voiceVisualizer.classList.remove("is-active");
+            }
+
+            if (state === "permission") {
+                voiceTrigger.disabled = true;
+                title.textContent = "Permiso";
+                subtitle.textContent = "Solicitando acceso al micro";
+                icon.textContent = "🔐";
+                voiceVisualizer.classList.remove("is-active");
+            }
+
+            if (state === "listening") {
+                voiceTrigger.disabled = false;
+                voiceTrigger.classList.add("is-listening");
+                title.textContent = "Escuchando...";
+                subtitle.textContent = "Habla ahora";
+                icon.textContent = "🎤";
+                voiceVisualizer.classList.add("is-active");
+            }
+
+            if (state === "processing") {
+                voiceTrigger.disabled = true;
+                voiceTrigger.classList.add("is-processing");
+                title.textContent = "Procesando...";
+                subtitle.textContent = "Transcribiendo y traduciendo";
+                icon.textContent = "⚙️";
+                voiceVisualizer.classList.remove("is-active");
+            }
+
+            if (state === "ready") {
+                voiceTrigger.disabled = false;
+                voiceTrigger.classList.add("is-ready");
+                title.textContent = "Listo";
+                subtitle.textContent = "Pulsa para repetir";
+                icon.textContent = "✅";
+                voiceVisualizer.classList.remove("is-active");
+            }
+
+            if (state === "disabled") {
+                voiceTrigger.disabled = true;
+                title.textContent = "No disponible";
+                subtitle.textContent = "Navegador no compatible";
+                icon.textContent = "⛔";
+                voiceVisualizer.classList.remove("is-active");
+            }
+        }
+
+        function setResultText(element, text, badgeElement, badgeText) {
+            element.classList.remove("show", "is-empty");
+            element.textContent = text;
+
+            if (!text || !text.trim()) {
+                element.classList.add("is-empty");
+            } else {
+                requestAnimationFrame(() => {
+                    element.classList.add("show");
+                });
+            }
+
+            if (badgeElement) {
+                badgeElement.textContent = badgeText;
+            }
+        }
+
+        async function ensureMicrophonePermission() {
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                throw new Error("Tu navegador no permite acceder al micrófono con esta API.");
+            }
+
+            updateVoiceButton("permission");
+            updateVoiceStatus("is-processing", "Solicitando permiso para utilizar el micrófono...");
+
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            stream.getTracks().forEach(track => track.stop());
+        }
+
+        async function translateText(text, langFrom, langTo) {
+            const endpoint = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${langFrom}|${langTo}`;
+
+            try {
+                const response = await fetch(endpoint);
+                if (!response.ok) {
+                    throw new Error("No se pudo contactar con el servicio de traducción.");
+                }
+
+                const data = await response.json();
+                const translated = data?.responseData?.translatedText?.trim();
+
+                if (!translated) {
+                    throw new Error("La traducción llegó vacía.");
+                }
+
+                return translated;
+            } catch (error) {
+                return `[Traducido]: ${text}`;
+            }
+        }
+
+        function normalizeVoiceLang(lang = "") {
+            return lang.toLowerCase().replace("_", "-");
+        }
+
+        function getBestVoiceForLanguage(targetVoiceCode) {
+            const voices = window.speechSynthesis.getVoices();
+            if (!voices.length) return null;
+
+            const normalizedTarget = normalizeVoiceLang(targetVoiceCode);
+            const shortTarget = normalizedTarget.split("-")[0];
+
+            const exactVoices = voices.filter(v => normalizeVoiceLang(v.lang) === normalizedTarget);
+            const familyVoices = voices.filter(v => normalizeVoiceLang(v.lang).startsWith(shortTarget));
+
+            const rankVoice = (voice) => {
+                const name = (voice.name || "").toLowerCase();
+                if (name.includes("google")) return 3;
+                if (name.includes("natural")) return 2;
+                return 1;
+            };
+
+            const exactSorted = [...exactVoices].sort((a, b) => rankVoice(b) - rankVoice(a));
+            const familySorted = [...familyVoices].sort((a, b) => rankVoice(b) - rankVoice(a));
+
+            return exactSorted[0] || familySorted[0] || null;
+        }
+
+        function speakTranslation(text, targetLanguage) {
+            if (!("speechSynthesis" in window)) return;
+
+            window.speechSynthesis.cancel();
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = targetLanguage.recognition;
+            utterance.rate = 1;
+            utterance.pitch = 1;
+
+            const preferredVoice = getBestVoiceForLanguage(targetLanguage.recognition);
+            if (preferredVoice) {
+                utterance.voice = preferredVoice;
+            }
+
+            const speakNow = () => window.speechSynthesis.speak(utterance);
+
+            if (!window.speechSynthesis.getVoices().length) {
+                setTimeout(speakNow, 150);
+            } else {
+                speakNow();
+            }
+        }
+
+        function buildRecognition(sourceLanguage) {
+            const sr = new SpeechRecognition();
+            sr.lang = sourceLanguage.recognition;
+            sr.interimResults = true;
+            sr.continuous = false;
+            sr.maxAlternatives = 1;
+
+            sr.onstart = () => {
+                isListening = true;
+                clearVoiceError();
+                finalTranscript = "";
+
+                updateVoiceButton("listening");
+                updateVoiceStatus("is-listening", `Micrófono activo. Habla en ${sourceLanguage.label.toLowerCase()}.`);
+                transcriptBadge.textContent = "Escuchando";
+                translationBadge.textContent = "En espera";
+
+                setResultText(
+                    transcriptOutput,
+                    `Escuchando tu voz en ${sourceLanguage.label.toLowerCase()} en tiempo real...`,
+                    transcriptBadge,
+                    "Escuchando"
+                );
+
+                setResultText(
+                    translationOutput,
+                    "La traducción aparecerá al finalizar la captura.",
+                    translationBadge,
+                    "En espera"
+                );
+            };
+
+            sr.onresult = (event) => {
+                let interimTranscript = "";
+                let accumulatedFinal = "";
+
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    const result = event.results[i];
+                    const transcript = result[0].transcript;
+
+                    if (result.isFinal) {
+                        accumulatedFinal += transcript + " ";
+                    } else {
+                        interimTranscript += transcript;
+                    }
+                }
+
+                finalTranscript = (finalTranscript + accumulatedFinal).trim();
+                const visibleText = (finalTranscript + " " + interimTranscript).trim();
+
+                if (visibleText) {
+                    setResultText(
+                        transcriptOutput,
+                        visibleText,
+                        transcriptBadge,
+                        interimTranscript ? "Capturando" : "Detectado"
+                    );
+                }
+            };
+
+            sr.onerror = (event) => {
+                isListening = false;
+                voiceVisualizer.classList.remove("is-active");
+                updateVoiceButton("idle");
+
+                let message = "Se ha producido un error al intentar usar el reconocimiento de voz.";
+
+                if (event.error === "not-allowed") {
+                    message = "Has bloqueado el acceso al micrófono. Permite el uso del micro y vuelve a intentarlo.";
+                } else if (event.error === "no-speech") {
+                    message = "No se ha detectado voz. Inténtalo de nuevo hablando un poco más cerca del micrófono.";
+                } else if (event.error === "audio-capture") {
+                    message = "No se ha podido capturar audio desde el micrófono.";
+                } else if (event.error === "network") {
+                    message = "El reconocimiento de voz ha fallado por un problema de red o de servicio.";
+                }
+
+                updateVoiceStatus("", "No se ha completado la captura de voz.");
+                showVoiceError(message);
+            };
+
+            sr.onend = async () => {
+                if (!isListening) return;
+                isListening = false;
+
+                const transcript = finalTranscript.trim();
+                const { source, target } = getSelectedLanguages();
+
+                if (!transcript) {
+                    updateVoiceButton("idle");
+                    updateVoiceStatus("", "No se obtuvo ninguna frase válida.");
+                    showVoiceError("No se ha podido reconocer una frase completa. Vuelve a intentarlo.");
+                    setResultText(
+                        transcriptOutput,
+                        "No se detectó contenido suficiente en la locución.",
+                        transcriptBadge,
+                        "Vacío"
+                    );
+                    return;
+                }
+
+                updateVoiceButton("processing");
+                updateVoiceStatus(
+                    "is-processing",
+                    `Texto capturado. Traduciendo de ${source.label.toLowerCase()} a ${target.label.toLowerCase()}...`
+                );
+                transcriptBadge.textContent = "Completado";
+                translationBadge.textContent = "Procesando";
+
+                const translatedText = await translateText(transcript, source.translate, target.translate);
+                setResultText(translationOutput, translatedText, translationBadge, "Traducido");
+
+                speakTranslation(translatedText, target);
+
+                updateVoiceButton("ready");
+                updateVoiceStatus("is-ready", "Proceso completado. Ya puedes volver a hablar.");
+            };
+
+            return sr;
+        }
+
+        async function startVoiceFlow() {
+            clearVoiceError();
+            syncLanguageSummary();
+
+            if (!SpeechRecognition) {
+                updateVoiceButton("disabled");
+                updateVoiceStatus("", "El reconocimiento de voz no está disponible en este navegador.");
+                showVoiceError("Este navegador no soporta SpeechRecognition. Para esta demo, utiliza Chrome o Edge recientes.");
+                return;
+            }
+
+            if (!window.isSecureContext) {
+                updateVoiceButton("idle");
+                updateVoiceStatus("", "No se ha iniciado la captura.");
+                showVoiceError("El micrófono requiere contexto seguro. Abre la página con HTTPS o con un servidor local compatible.");
+                return;
+            }
+
+            try {
+                await ensureMicrophonePermission();
+
+                const { source } = getSelectedLanguages();
+
+                if (recognition) {
+                    recognition.onstart = null;
+                    recognition.onresult = null;
+                    recognition.onerror = null;
+                    recognition.onend = null;
+                }
+
+                recognition = buildRecognition(source);
+                recognition.start();
+            } catch (error) {
+                updateVoiceButton("idle");
+                updateVoiceStatus("", "No se ha podido iniciar el micrófono.");
+                showVoiceError("No se ha concedido permiso al micrófono o el dispositivo no está disponible.");
+            }
+        }
+
+        function swapLanguages() {
+            const currentSource = sourceLanguageSelect.value;
+            const currentTarget = targetLanguageSelect.value;
+
+            sourceLanguageSelect.value = currentTarget;
+            targetLanguageSelect.value = currentSource;
+
+            syncLanguageSummary();
+            showToast("Idiomas intercambiados.", "success");
+        }
+
+        sourceLanguageSelect.addEventListener("change", syncLanguageSummary);
+        targetLanguageSelect.addEventListener("change", syncLanguageSummary);
+        swapLanguagesButton.addEventListener("click", swapLanguages);
+        voiceTrigger.addEventListener("click", startVoiceFlow);
+
+        if ("speechSynthesis" in window) {
+            window.speechSynthesis.onvoiceschanged = () => {
+                window.speechSynthesis.getVoices();
+            };
+            window.speechSynthesis.getVoices();
+        }
+
+        populateLanguageSelectors();
+        updateVoiceButton("idle");
+    </script>
+</body>
+</html>

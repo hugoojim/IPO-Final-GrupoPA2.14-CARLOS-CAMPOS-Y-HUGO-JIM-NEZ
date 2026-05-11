@@ -1903,10 +1903,449 @@
                 max-width: calc(100vw - 32px);
             }
         }
+
+
+        /* ==========================
+           MOBILE APP-LIKE NAVIGATION
+           Mejora móvil sin tocar la experiencia de escritorio
+        ========================== */
+        .mobile-bottom-nav {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-bottom: calc(92px + env(safe-area-inset-bottom));
+            }
+
+            .open-menu-btn {
+                display: none;
+            }
+
+            .mobile-bottom-nav {
+                position: fixed;
+                left: max(12px, env(safe-area-inset-left));
+                right: max(12px, env(safe-area-inset-right));
+                bottom: max(12px, env(safe-area-inset-bottom));
+                z-index: 9000;
+                display: block;
+                padding: 10px;
+                border-radius: 26px;
+                background: rgba(5, 18, 12, 0.88);
+                border: 1px solid rgba(0, 255, 102, 0.22);
+                backdrop-filter: blur(22px);
+                box-shadow: 0 20px 55px rgba(0, 0, 0, 0.48), 0 0 34px rgba(0, 255, 102, 0.08);
+            }
+
+            .mobile-bottom-group {
+                display: grid;
+                gap: 8px;
+            }
+
+            .mobile-bottom-group.guest-only {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .mobile-bottom-group.user-only {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .mobile-nav-link,
+            .mobile-nav-button {
+                min-width: 0;
+                min-height: 58px;
+                border: 1px solid rgba(255,255,255,0.08);
+                border-radius: 18px;
+                background: rgba(255,255,255,0.045);
+                color: var(--text-soft);
+                text-decoration: none;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 5px;
+                font-family: inherit;
+                font-size: 0.72rem;
+                font-weight: 900;
+                letter-spacing: -0.01em;
+                cursor: pointer;
+                transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            .mobile-nav-link strong,
+            .mobile-nav-button strong {
+                font-size: 1.1rem;
+                line-height: 1;
+            }
+
+            .mobile-nav-link span,
+            .mobile-nav-button span {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                max-width: 100%;
+            }
+
+            .mobile-nav-link:active,
+            .mobile-nav-button:active {
+                transform: scale(0.96);
+            }
+
+            .mobile-nav-link.is-active,
+            .mobile-nav-button.is-active,
+            .mobile-nav-link:hover,
+            .mobile-nav-button:hover {
+                color: #03120a;
+                background: linear-gradient(135deg, var(--accent), var(--accent-soft));
+                border-color: rgba(0,255,102,0.42);
+                box-shadow: 0 10px 26px rgba(0,255,102,0.16);
+            }
+
+            .mobile-nav-button.is-danger {
+                color: #ffd7db;
+                border-color: rgba(255,95,109,0.18);
+                background: rgba(255,95,109,0.08);
+            }
+
+            .mobile-nav-button.is-danger:hover {
+                color: #31040a;
+                background: linear-gradient(135deg, #ff7a85, #ffb0b8);
+                border-color: rgba(255,95,109,0.38);
+            }
+
+            /* Reduce scroll en móvil: la landing mantiene estética, pero es más compacta */
+            section {
+                min-height: auto;
+                padding: 74px 0 104px;
+            }
+
+            #vision {
+                padding-top: 88px;
+            }
+
+            .auth-section {
+                padding-top: 74px;
+                padding-bottom: 112px;
+            }
+
+            h2 {
+                font-size: clamp(2.25rem, 11vw, 3.55rem);
+                line-height: 0.95;
+                margin-bottom: 18px;
+            }
+
+            .description {
+                font-size: 1rem;
+                line-height: 1.65;
+                margin-bottom: 22px;
+            }
+
+            .hero-title {
+                font-size: clamp(2.2rem, 11vw, 3.35rem);
+            }
+
+            .hero-description {
+                font-size: 0.98rem;
+                line-height: 1.65;
+                margin-top: 18px;
+            }
+
+            .hero-metrics,
+            .hero-bottom {
+                display: none;
+            }
+
+            .feature-card {
+                padding: 22px;
+            }
+
+            /* La herramienta en móvil se comporta como app: control principal arriba y navegación fija abajo */
+            .session-user main,
+            .sidebar-hidden.session-user main {
+                padding-top: 18px;
+                padding-bottom: calc(112px + env(safe-area-inset-bottom));
+            }
+
+            .session-user #tool {
+                min-height: auto;
+                padding-top: 18px;
+                padding-bottom: 104px;
+            }
+
+            .session-user .tool-session-card {
+                display: none;
+            }
+
+            .session-user .voice-intro {
+                display: none;
+            }
+
+            .voice-topbar {
+                margin-bottom: 18px;
+            }
+
+            .voice-kicker {
+                font-size: 0.68rem;
+                letter-spacing: 0.1em;
+                margin-bottom: 8px;
+            }
+
+            .voice-title {
+                font-size: clamp(2.05rem, 11vw, 3rem);
+                margin-bottom: 0;
+            }
+
+            .voice-lang-card {
+                justify-content: space-between;
+                gap: 10px;
+                padding: 13px 14px;
+                margin-bottom: 18px;
+            }
+
+            .voice-lang-item {
+                min-width: 0;
+                flex: 1;
+            }
+
+            .voice-lang-item strong {
+                font-size: 0.92rem;
+            }
+
+            .voice-lang-item span {
+                font-size: 0.74rem;
+            }
+
+            .voice-controls {
+                gap: 14px;
+                margin: 22px 0 18px;
+            }
+
+            .voice-trigger {
+                min-height: 128px;
+            }
+
+            .voice-status {
+                font-size: 0.86rem;
+                padding: 12px 13px;
+                margin-bottom: 14px;
+            }
+
+            .manual-text-input {
+                min-height: 110px;
+            }
+
+            .voice-result-card {
+                min-height: auto;
+                padding: 18px;
+            }
+
+            .history-panel,
+            .settings-page-panel {
+                min-height: auto;
+                padding-bottom: 24px;
+            }
+
+            /* En móvil, la landing funciona por pestañas para evitar scroll largo */
+            body.session-guest[data-mobile-section="vision"] #ingenieria,
+            body.session-guest[data-mobile-section="vision"] #experiencia,
+            body.session-guest[data-mobile-section="vision"] #venta,
+            body.session-guest[data-mobile-section="vision"] #auth,
+            body.session-guest[data-mobile-section="vision"] #footer,
+            body.session-guest[data-mobile-section="ingenieria"] #vision,
+            body.session-guest[data-mobile-section="ingenieria"] #experiencia,
+            body.session-guest[data-mobile-section="ingenieria"] #venta,
+            body.session-guest[data-mobile-section="ingenieria"] #auth,
+            body.session-guest[data-mobile-section="ingenieria"] #footer,
+            body.session-guest[data-mobile-section="experiencia"] #vision,
+            body.session-guest[data-mobile-section="experiencia"] #ingenieria,
+            body.session-guest[data-mobile-section="experiencia"] #venta,
+            body.session-guest[data-mobile-section="experiencia"] #auth,
+            body.session-guest[data-mobile-section="experiencia"] #footer,
+            body.session-guest[data-mobile-section="auth"] #vision,
+            body.session-guest[data-mobile-section="auth"] #ingenieria,
+            body.session-guest[data-mobile-section="auth"] #experiencia,
+            body.session-guest[data-mobile-section="auth"] #venta,
+            body.session-guest[data-mobile-section="auth"] #footer {
+                display: none !important;
+            }
+
+            body.session-guest main,
+            body.session-guest.sidebar-hidden main {
+                min-height: 100dvh;
+                padding-top: max(18px, env(safe-area-inset-top));
+                padding-bottom: calc(104px + env(safe-area-inset-bottom));
+            }
+
+            body.session-guest section {
+                min-height: calc(100dvh - 118px);
+                padding: max(66px, env(safe-area-inset-top)) 0 104px;
+                justify-content: center;
+            }
+
+            body.session-guest #vision {
+                padding-top: max(72px, env(safe-area-inset-top));
+            }
+
+            body.session-guest #vision .divider,
+            body.session-guest #ingenieria .divider,
+            body.session-guest #experiencia .divider,
+            body.session-guest #auth .divider {
+                display: none;
+            }
+
+            body.session-guest .feature-grid {
+                gap: 14px;
+            }
+
+            body.session-guest .feature-card {
+                padding: 18px;
+            }
+
+            body.session-guest .feature-card h4 {
+                font-size: 1.05rem;
+                margin-bottom: 8px;
+            }
+
+            body.session-guest .feature-card p {
+                font-size: 0.88rem;
+                line-height: 1.5;
+            }
+
+            body.session-guest .auth-shell {
+                gap: 16px;
+            }
+
+            body.session-guest .auth-panel {
+                padding: 18px;
+            }
+
+            body.session-guest .hero-panel {
+                display: none;
+            }
+
+            /* Pantalla de acceso más directa e intuitiva en móvil */
+            body.session-guest[data-mobile-section="auth"] #auth {
+                justify-content: flex-start;
+                align-items: stretch;
+                padding-top: max(20px, env(safe-area-inset-top));
+            }
+
+            body.session-guest[data-mobile-section="auth"] #auth > .tag,
+            body.session-guest[data-mobile-section="auth"] #auth > h2 {
+                display: none;
+            }
+
+            body.session-guest[data-mobile-section="auth"] .auth-shell {
+                display: block;
+                gap: 0;
+            }
+
+            body.session-guest[data-mobile-section="auth"] .auth-panel {
+                padding: 20px 16px 22px;
+                border-radius: 24px;
+            }
+
+            body.session-guest[data-mobile-section="auth"] .auth-topbar {
+                margin-bottom: 14px;
+                align-items: flex-start;
+            }
+
+            body.session-guest[data-mobile-section="auth"] .auth-topbar h3 {
+                font-size: 1.9rem;
+                line-height: 0.95;
+                letter-spacing: -0.05em;
+                margin-bottom: 8px;
+            }
+
+            body.session-guest[data-mobile-section="auth"] .auth-topbar p {
+                font-size: 0.92rem;
+                line-height: 1.55;
+                max-width: 32ch;
+            }
+
+            body.session-guest[data-mobile-section="auth"] .mode-switch {
+                margin-bottom: 14px;
+            }
+
+            body.session-guest[data-mobile-section="auth"] .switch-btn {
+                padding: 13px 12px;
+                font-size: 0.88rem;
+            }
+
+            body.session-guest[data-mobile-section="auth"] .form-panel {
+                padding: 8px 0 0;
+            }
+
+            body.session-guest[data-mobile-section="auth"] .form-badge {
+                display: none;
+            }
+
+            body.session-guest[data-mobile-section="auth"] .form-title {
+                font-size: 1.55rem;
+                line-height: 1;
+                margin-bottom: 8px;
+            }
+
+            body.session-guest[data-mobile-section="auth"] .form-subtitle {
+                margin-top: 0;
+                margin-bottom: 14px;
+                font-size: 0.92rem;
+                line-height: 1.5;
+            }
+
+            body.session-guest[data-mobile-section="auth"] .form-grid {
+                gap: 12px;
+            }
+
+            body.session-guest[data-mobile-section="auth"] .field {
+                gap: 6px;
+            }
+
+            body.session-guest[data-mobile-section="auth"] .field label {
+                font-size: 0.82rem;
+            }
+
+            body.session-guest[data-mobile-section="auth"] .input-wrap input {
+                padding: 14px 15px;
+                border-radius: 14px;
+                font-size: 0.95rem;
+            }
+
+            body.session-guest[data-mobile-section="auth"] .error-text {
+                min-height: 14px;
+                font-size: 0.75rem;
+            }
+
+            body.session-guest[data-mobile-section="auth"] .form-meta {
+                gap: 10px;
+                margin-top: -2px;
+            }
+
+            body.session-guest[data-mobile-section="auth"] .check-wrap,
+            body.session-guest[data-mobile-section="auth"] .text-link {
+                font-size: 0.82rem;
+            }
+
+            body.session-guest[data-mobile-section="auth"] .submit-btn {
+                margin-top: 2px;
+                padding: 15px 16px;
+            }
+
+            body.session-guest[data-mobile-section="auth"] .form-footer {
+                margin-top: 12px;
+                font-size: 0.86rem;
+            }
+
+            body.session-guest[data-mobile-section="auth"] .panel-note {
+                display: none;
+            }
+        }
+
     </style>
 </head>
 
-<body id="main-body" class="session-guest sidebar-hidden">
+<body id="main-body" class="session-guest sidebar-hidden" data-mobile-section="vision">
     <button class="toggle-btn open-menu-btn" onclick="toggleSidebar()">☰ Abrir menú</button>
 
     <aside id="sidebar" class="site-sidebar">
@@ -1948,10 +2387,52 @@
         </nav>
 
         <div class="sidebar-footer">
-            <div class="version">Aura Pro // v7.7</div>
+            <div class="version">Aura Pro // v7.8</div>
             <div class="status-chip" id="sidebarStatus">Modo invitado</div>
         </div>
     </aside>
+
+
+
+    <nav class="mobile-bottom-nav" aria-label="Navegación móvil rápida">
+        <div class="mobile-bottom-group guest-only">
+            <a href="#vision" class="mobile-nav-link is-active" data-mobile-section="vision" onclick="return mobileNavigateTo('vision', event)">
+                <strong>⌂</strong>
+                <span>Inicio</span>
+            </a>
+            <a href="#ingenieria" class="mobile-nav-link" data-mobile-section="ingenieria" onclick="return mobileNavigateTo('ingenieria', event)">
+                <strong>⚙</strong>
+                <span>Ingeniería</span>
+            </a>
+            <a href="#experiencia" class="mobile-nav-link" data-mobile-section="experiencia" onclick="return mobileNavigateTo('experiencia', event)">
+                <strong>✦</strong>
+                <span>Impacto</span>
+            </a>
+            <a href="#auth" class="mobile-nav-link" data-mobile-section="auth" onclick="return mobileNavigateTo('auth', event)">
+                <strong>↪</strong>
+                <span>Entrar</span>
+            </a>
+        </div>
+
+        <div class="mobile-bottom-group user-only">
+            <button class="mobile-nav-button is-active" type="button" data-mobile-user-view="tool" onclick="showUserView('tool')">
+                <strong>🎙</strong>
+                <span>Hablar</span>
+            </button>
+            <button class="mobile-nav-button" type="button" data-mobile-user-view="history" onclick="showUserView('history')">
+                <strong>◴</strong>
+                <span>Historial</span>
+            </button>
+            <button class="mobile-nav-button" type="button" data-mobile-user-view="settings" onclick="showUserView('settings')">
+                <strong>⚙</strong>
+                <span>Ajustes</span>
+            </button>
+            <button class="mobile-nav-button is-danger" type="button" onclick="setSession('guest')">
+                <strong>⏻</strong>
+                <span>Salir</span>
+            </button>
+        </div>
+    </nav>
 
     <main>
         <section id="vision" class="guest-only">
@@ -1962,8 +2443,8 @@
                 construye una experiencia de comunicación natural, rápida y humana.
             </p>
             <div class="cta-row">
-                <a href="#auth" class="primary-btn">Acceder al portal Aura</a>
-                <a href="#ingenieria" class="secondary-btn">Ver tecnología</a>
+                <a href="#auth" class="primary-btn" data-mobile-jump="auth" onclick="return mobileNavigateTo('auth', event)">Acceder al portal Aura</a>
+                <a href="#ingenieria" class="secondary-btn" data-mobile-jump="ingenieria" onclick="return mobileNavigateTo('ingenieria', event)">Ver tecnología</a>
             </div>
             <div class="divider"></div>
         </section>
@@ -2094,8 +2575,8 @@
                 <div class="auth-panel">
                     <div class="auth-topbar">
                         <div>
-                            <h3>Portal de acceso</h3>
-                            <p>Login y registro local para activar la interfaz de usuario.</p>
+                            <h3>Accede a Aura Pro</h3>
+                            <p>Introduce tus datos para activar la interfaz o crea tu cuenta en segundos.</p>
                         </div>
                     </div>
 
@@ -2553,6 +3034,49 @@
             }
         }
 
+
+        function updateMobileNavActive(viewOrSection) {
+            document.querySelectorAll("[data-mobile-user-view]").forEach(button => {
+                button.classList.toggle("is-active", button.dataset.mobileUserView === viewOrSection);
+            });
+
+            document.querySelectorAll("[data-mobile-section]").forEach(link => {
+                link.classList.toggle("is-active", link.dataset.mobileSection === viewOrSection);
+            });
+        }
+
+        function mobileNavigateTo(sectionId, event = null) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+
+            const target = document.getElementById(sectionId);
+            if (!target) return false;
+
+            if (window.innerWidth <= 768 && els.body.classList.contains("session-guest")) {
+                els.body.setAttribute("data-mobile-section", sectionId);
+                updateMobileNavActive(sectionId);
+                closeSidebarOnMobile();
+
+                requestAnimationFrame(() => {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: "smooth"
+                    });
+                });
+
+                return false;
+            }
+
+            target.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+
+            return false;
+        }
+
         function getPrefs() {
             try {
                 return {
@@ -2663,6 +3187,8 @@
                 link.classList.toggle("active", link.dataset.userViewLink === view);
             });
 
+            updateMobileNavActive(view);
+
             document.getElementById("tool")?.scrollIntoView({
                 behavior: "smooth",
                 block: "start"
@@ -2679,6 +3205,7 @@
 
             if (isUser) {
                 AURA_STORAGE.setItem(AURA_USER_KEY, JSON.stringify(user));
+                els.body.removeAttribute("data-mobile-section");
 
                 const initials = initialsFromName(user.name);
                 const displayName = user.name || "Usuario Aura";
@@ -2709,6 +3236,9 @@
 
                 els.body.classList.remove("session-user");
                 els.body.classList.add("session-guest");
+                els.body.setAttribute("data-mobile-section", "vision");
+                updateMobileNavActive("vision");
+                updateMobileNavActive("vision");
 
                 els.sidebarStatus.textContent = "Modo invitado";
                 els.sidebarSubtitle.textContent = "Interfaz avanzada de traducción y acceso inteligente con una experiencia visual moderna.";
@@ -3330,6 +3860,14 @@
             els.clearHistoryBtn.addEventListener("click", () => {
                 saveHistory([]);
                 showToast("Historial de traducciones limpiado.", "success");
+            });
+
+            document.querySelectorAll("[data-mobile-jump]").forEach(button => {
+                button.addEventListener("click", event => {
+                    if (window.innerWidth <= 768 && els.body.classList.contains("session-guest")) {
+                        mobileNavigateTo(button.dataset.mobileJump, event);
+                    }
+                });
             });
 
             document.addEventListener("keydown", event => {
